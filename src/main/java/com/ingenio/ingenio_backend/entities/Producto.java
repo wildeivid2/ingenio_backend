@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Builder
 @AllArgsConstructor
@@ -25,7 +26,7 @@ import javax.persistence.Table;
 @ToString
 @Entity
 @Table(name = "productos")
-public class Producto {
+public class Producto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +42,8 @@ public class Producto {
 
     @Column(name = "matricula", nullable = false, unique = true, length = 10)
     private String matricula;
+
+
+    private static final long serialVersionUID = -5472300652870341080L;
 
 }

@@ -25,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +39,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "logisticas")
-public class Logistica {
+public class Logistica implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,6 +86,12 @@ public class Logistica {
     @OneToMany(mappedBy = "logistica", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<LogisticaDetalle> logisticaDetalles = new ArrayList<>();
+
+
+
+    private static final long serialVersionUID = -5582022831964677636L;
+
+
 
     @PostConstruct
     private void init() {

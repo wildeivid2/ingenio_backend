@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +21,7 @@ import javax.persistence.Table;
 @ToString
 @Entity
 @Table(name = "tipo_transportes")
-public class TipoTransporte {
+public class TipoTransporte implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +30,8 @@ public class TipoTransporte {
 
     @Column(name = "tipo_transporte", nullable = false, unique = true, length = 100)
     private String tipoTransporte;
+
+
+    private static final long serialVersionUID = 8891339882622337231L;
 
 }

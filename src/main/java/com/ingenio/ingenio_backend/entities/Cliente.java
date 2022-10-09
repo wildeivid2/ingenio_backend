@@ -38,15 +38,13 @@ import java.util.List;
 @Table(name = "clientes")
 public class Cliente implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@NotEmpty
 	private String nombre;
-	
+
 	@NotEmpty
 	private String apellido;
 
@@ -84,6 +82,11 @@ public class Cliente implements Serializable {
 	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonManagedReference
 	private List<Pedido> pedidos = new ArrayList<>();
+
+
+
+	private static final long serialVersionUID = -6621287849575654850L;
+
 
 	@PrePersist
 	private void prePersist() {

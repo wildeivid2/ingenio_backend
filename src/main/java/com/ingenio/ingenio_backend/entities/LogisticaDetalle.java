@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Builder
 @AllArgsConstructor
@@ -26,7 +27,7 @@ import javax.persistence.Table;
 @ToString
 @Entity
 @Table(name = "logistica_detalles")
-public class LogisticaDetalle {
+public class LogisticaDetalle implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,5 +45,8 @@ public class LogisticaDetalle {
 
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
+
+
+    private static final long serialVersionUID = 8812578241452144279L;
 
 }

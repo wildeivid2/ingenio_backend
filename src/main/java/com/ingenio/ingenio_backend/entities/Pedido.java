@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "pedidos")
-public class Pedido {
+public class Pedido implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +56,8 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Logistica> logisticas = new ArrayList<>();
+
+
+    private static final long serialVersionUID = 8710115729500531138L;
 
 }
