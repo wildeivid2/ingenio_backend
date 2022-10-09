@@ -50,7 +50,7 @@ public class Cliente implements Serializable {
 	@NotEmpty
 	private String apellido;
 
-	@OneToOne(cascade = {CascadeType.ALL})
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "tipo_documento_ID", referencedColumnName = "id")
 	private TipoDocumento tipoDocumento;
 

@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @AllArgsConstructor
@@ -32,7 +31,7 @@ public class Bodega {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "tipo_transporte_ID", nullable = false)
+    @JoinColumn(name = "tipo_transporte_id", nullable = false)
     private TipoTransporte tipoTransporte;
 
     @Column(name = "bodega", nullable = false, unique = true, length = 100)
