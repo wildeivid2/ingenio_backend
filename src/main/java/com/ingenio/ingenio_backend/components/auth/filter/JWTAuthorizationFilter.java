@@ -1,7 +1,7 @@
 package com.ingenio.ingenio_backend.components.auth.filter;
 
 import com.ingenio.ingenio_backend.components.auth.service.JWTService;
-import com.ingenio.ingenio_backend.components.auth.service.JWTServiceImpl;
+import com.ingenio.ingenio_backend.components.auth.service.impl.JWTServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

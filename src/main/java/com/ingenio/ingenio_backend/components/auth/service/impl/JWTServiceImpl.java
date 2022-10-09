@@ -1,7 +1,8 @@
-package com.ingenio.ingenio_backend.components.auth.service;
+package com.ingenio.ingenio_backend.components.auth.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ingenio.ingenio_backend.components.auth.SimpleGrantedAuthorityMixin;
+import com.ingenio.ingenio_backend.components.auth.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

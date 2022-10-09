@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ingenio.ingenio_backend.components.auth.service.JWTService;
-import com.ingenio.ingenio_backend.components.auth.service.JWTServiceImpl;
+import com.ingenio.ingenio_backend.components.auth.service.impl.JWTServiceImpl;
 import com.ingenio.ingenio_backend.entities.Usuario;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

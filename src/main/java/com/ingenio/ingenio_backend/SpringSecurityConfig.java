@@ -3,7 +3,7 @@ package com.ingenio.ingenio_backend;
 import com.ingenio.ingenio_backend.components.auth.filter.JWTAuthenticationFilter;
 import com.ingenio.ingenio_backend.components.auth.filter.JWTAuthorizationFilter;
 import com.ingenio.ingenio_backend.components.auth.service.JWTService;
-import com.ingenio.ingenio_backend.components.auth.service.JpaUserDetailsService;
+import com.ingenio.ingenio_backend.components.auth.service.impl.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

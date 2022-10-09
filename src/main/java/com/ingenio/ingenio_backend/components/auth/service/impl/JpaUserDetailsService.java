@@ -1,4 +1,4 @@
-package com.ingenio.ingenio_backend.components.auth.service;
+package com.ingenio.ingenio_backend.components.auth.service.impl;
 
 
 import com.ingenio.ingenio_backend.dao.IUsuarioDao;
