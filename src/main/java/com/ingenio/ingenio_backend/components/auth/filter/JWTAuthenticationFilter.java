@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ingenio.ingenio_backend.components.auth.service.JWTService;
 import com.ingenio.ingenio_backend.components.auth.service.JWTServiceImpl;
+import com.ingenio.ingenio_backend.entities.Usuario;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,13 +48,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			logger.info("Password desde request parameter (form-data): " + password);
 			
 		} else {
-			com.ingenio.ingenio_backend.entities.User user = null;
+			Usuario usuario = null;
 			try {
 				
-				user = new ObjectMapper().readValue(request.getInputStream(), com.ingenio.ingenio_backend.entities.User.class);
+				usuario = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
 				
-				username = user.getUsername();
-				password = user.getPassword();
+				username = usuario.getUsername();
+				password = usuario.getPassword();
 				
 				logger.info("Username desde request InputStream (raw): " + username);
 				logger.info("Password desde request InputStream (raw): " + password);

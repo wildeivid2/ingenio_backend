@@ -17,8 +17,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -27,25 +32,36 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
-@Table(name = "users")
-public class User implements Serializable {
+@Table(
+		name = "users",
+		uniqueConstraints= {
+				@UniqueConstraint(columnNames= {"username"}),
+				@UniqueConstraint(columnNames= {"email"})
+		}
+)
+public class Usuario implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotEmpty
 	@Column(length = 30, unique = true)
 	private String username;
 
+	@NotEmpty
 	@Column(length = 60)
 	private String password;
 
 	private Boolean enabled;
 
+	@NotEmpty
+	@Email
+	private String email;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private List<Role> roles;
-
 
 	private static final long serialVersionUID = 2697905384575286715L;
 
