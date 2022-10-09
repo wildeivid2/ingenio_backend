@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequestMapping("/cliente")
 public class ClienteController extends CommonController<Cliente, IClienteService> {
 
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public ResponseEntity<?> editar(@RequestBody Cliente cliente, @PathVariable Long id) {
         Optional<Cliente> o = this.service.findById(id);
 
@@ -30,13 +30,13 @@ public class ClienteController extends CommonController<Cliente, IClienteService
         Cliente clienteDb = o.get();
         clienteDb.setNombre(cliente.getNombre());
         clienteDb.setApellido(cliente.getApellido());
-        clienteDb.setTipoDocumento(clienteDb.getTipoDocumento());
+        clienteDb.setTipoDocumento(cliente.getTipoDocumento());
         clienteDb.setNumeroDocumento(cliente.getNumeroDocumento());
         clienteDb.setPais(cliente.getPais());
         clienteDb.setCiudad(cliente.getCiudad());
         clienteDb.setDireccion(cliente.getDireccion());
         clienteDb.setCelular(cliente.getCelular());
-        clienteDb.setEmail(clienteDb.getEmail());
+        clienteDb.setEmail(cliente.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(clienteDb));
     }
