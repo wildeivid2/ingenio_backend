@@ -1,12 +1,14 @@
 package com.ingenio.ingenio_backend.components.auth.filter;
 
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ingenio.ingenio_backend.components.auth.service.JWTService;
+import com.ingenio.ingenio_backend.Constants.Constants;
+import com.ingenio.ingenio_backend.components.auth.service.IJWTService;
 import com.ingenio.ingenio_backend.components.auth.service.impl.JWTServiceImpl;
 import com.ingenio.ingenio_backend.entities.Usuario;
+import org.apache.hc.core5.http.ContentType;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,23 +24,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private AuthenticationManager authenticationManager;
-	private JWTService jwtService;
+	private IJWTService jwtService;
 
-	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
+	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, IJWTService jwtService) {
 		this.authenticationManager = authenticationManager;
-		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
+		setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(Constants.PATH_LOGIN_API, HttpMethod.POST.name()));
 		
 		this.jwtService = jwtService;
 	}
 
 	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-			throws AuthenticationException {
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		
 		String username = obtainUsername(request);
 		String password = obtainPassword(request);
@@ -48,7 +50,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			logger.info("Password desde request parameter (form-data): " + password);
 			
 		} else {
-			Usuario usuario = null;
+			final Usuario usuario;
 			try {
 				
 				usuario = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
@@ -59,16 +61,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 				logger.info("Username desde request InputStream (raw): " + username);
 				logger.info("Password desde request InputStream (raw): " + password);
 				
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		username = username.trim();
+		username = Objects.requireNonNull(username).trim();
 		
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
 		
@@ -76,32 +74,33 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	}
 
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
 
 		String token = jwtService.create(authResult);
 		
 		response.addHeader(JWTServiceImpl.HEADER_STRING, JWTServiceImpl.TOKEN_PREFIX.concat(token));
 		
-		Map<String, Object> body = new HashMap<String, Object>();
+		Map<String, Object> body = new HashMap<>();
 		body.put("token", token);
-		body.put("user", (User) authResult.getPrincipal());
-		body.put("mensaje", String.format("Hola %s, has iniciado sesión con éxito!", ((User) authResult.getPrincipal()).getUsername()) );
+		body.put("user", authResult.getPrincipal());
+		body.put("message", String.format("Hola %s, has iniciado sesión con éxito!", ((User) authResult.getPrincipal()).getUsername()) );
 		
 		response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-		response.setStatus(200);
-		response.setContentType("application/json");
+		response.setStatus(HttpStatus.OK.value());
+		response.setContentType(ContentType.APPLICATION_JSON.getMimeType());
 	}
 
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 
 		final Map<String, Object> body = new HashMap<>();
-		body.put("mensaje", "Error de autenticación: username o password incorrecto!");
-		body.put("error", failed.getMessage());
+		body.put("error", "Authentication Error: username o password invalid!");
+		body.put("message", failed.getMessage());
 		
 		response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-		response.setStatus(401);
-		response.setContentType("application/json");
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		response.setContentType(ContentType.APPLICATION_JSON.getMimeType());
+
 	}
 	
 	

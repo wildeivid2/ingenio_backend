@@ -1,5 +1,7 @@
 package com.ingenio.ingenio_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +53,7 @@ public class Usuario implements Serializable {
 
 	@NotEmpty
 	@Column(length = 60)
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
 	private Boolean enabled;
@@ -63,7 +66,7 @@ public class Usuario implements Serializable {
 	@JoinColumn(name = "user_id")
 	private List<Role> roles;
 
-	private static final long serialVersionUID = 2697905384575286715L;
 
+	private static final long serialVersionUID = 2697905384575286715L;
 
 }

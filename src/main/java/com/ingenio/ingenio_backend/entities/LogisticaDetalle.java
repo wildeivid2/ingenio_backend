@@ -1,5 +1,6 @@
 package com.ingenio.ingenio_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class LogisticaDetalle {
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "logistica_id", nullable = false)
+    @JsonBackReference
     private Logistica logistica;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)

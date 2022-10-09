@@ -1,6 +1,6 @@
 package com.ingenio.ingenio_backend.components.auth.filter;
 
-import com.ingenio.ingenio_backend.components.auth.service.JWTService;
+import com.ingenio.ingenio_backend.components.auth.service.IJWTService;
 import com.ingenio.ingenio_backend.components.auth.service.impl.JWTServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,19 +15,17 @@ import java.io.IOException;
 
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
-	
-	private JWTService jwtService;
 
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
+	private final IJWTService jwtService;
+
+	public JWTAuthorizationFilter(final AuthenticationManager authenticationManager, final IJWTService jwtService) {
 		super(authenticationManager);
 		this.jwtService = jwtService;
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-
-		String header = request.getHeader(JWTServiceImpl.HEADER_STRING);
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+		final String header = request.getHeader(JWTServiceImpl.HEADER_STRING);
 
 		if (!requiresAuthentication(header)) {
 			chain.doFilter(request, response);
@@ -35,14 +33,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 		}
 
 		UsernamePasswordAuthenticationToken authentication = null;
-		
+
 		if(jwtService.validate(header)) {
 			authentication = new UsernamePasswordAuthenticationToken(jwtService.getUsername(header), null, jwtService.getRoles(header));
 		}
-		
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		chain.doFilter(request, response);
-		
 	}
 
 	protected boolean requiresAuthentication(String header) {

@@ -1,6 +1,5 @@
 package com.ingenio.ingenio_backend.components.auth.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -16,31 +15,32 @@ import java.io.IOException;
 import java.util.Locale;
 
 @Component
-public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
+public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-	@Autowired
-    private MessageSource messageSource;
-	
-	@Autowired
-    private LocaleResolver localeResolver;
+    private final  MessageSource messageSource;
+    private final  LocaleResolver localeResolver;
+
+	public LoginSuccessHandler(final MessageSource messageSource, final LocaleResolver localeResolver) {
+		this.messageSource = messageSource;
+		this.localeResolver = localeResolver;
+	}
 	
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws IOException, ServletException {
+	public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException, ServletException {
 
-		SessionFlashMapManager flashMapManager = new SessionFlashMapManager();
+		final SessionFlashMapManager flashMapManager = new SessionFlashMapManager();
+
+		final FlashMap flashMap = new FlashMap();
+
+		final Locale locale = localeResolver.resolveLocale(request);
+		final String message = String.format(messageSource.getMessage("text.login.success", null, locale), authentication.getName());
 		
-		FlashMap flashMap = new FlashMap();
-		
-		Locale locale = localeResolver.resolveLocale(request);
-		String mensaje = String.format(messageSource.getMessage("text.login.success", null, locale), authentication.getName());
-		
-		flashMap.put("success", mensaje);
+		flashMap.put("success", message);
 		
 		flashMapManager.saveOutputFlashMap(flashMap, request, response);
 		
 		if(authentication != null) {
-			logger.info(mensaje);
+			logger.info(message);
 		}
 		
 		super.onAuthenticationSuccess(request, response, authentication);

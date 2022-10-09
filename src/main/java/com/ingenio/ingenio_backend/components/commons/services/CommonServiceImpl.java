@@ -1,11 +1,13 @@
 package com.ingenio.ingenio_backend.components.commons.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 public class CommonServiceImpl<E, R extends CrudRepository<E, Long>> implements ICommonService<E> {
 
     @Autowired

@@ -1,6 +1,8 @@
 package com.ingenio.ingenio_backend.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,6 +52,7 @@ public class Logistica {
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "pedido_id", nullable = false)
+    @JsonBackReference
     private Pedido pedido;
 
     @Column(name = "catidad_total_productos")
@@ -67,7 +71,7 @@ public class Logistica {
     private Date fechaEntrega;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "bodega_ID", nullable = false)
+    @JoinColumn(name = "bodega_id", nullable = false)
     private Bodega bodega;
 
     @Column(name = "precio_normal", nullable = false, precision = 19, scale = 2)
@@ -79,7 +83,8 @@ public class Logistica {
     @Column(name = "precio_envio", nullable = false, precision = 19, scale = 2)
     private BigDecimal precioEnvio;
 
-    @OneToMany(mappedBy = "logistica", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "logistica", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<LogisticaDetalle> logisticaDetalles = new ArrayList<>();
 
     @PostConstruct

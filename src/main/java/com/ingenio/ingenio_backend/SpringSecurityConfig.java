@@ -1,8 +1,9 @@
 package com.ingenio.ingenio_backend;
 
+import com.ingenio.ingenio_backend.Constants.Constants;
 import com.ingenio.ingenio_backend.components.auth.filter.JWTAuthenticationFilter;
 import com.ingenio.ingenio_backend.components.auth.filter.JWTAuthorizationFilter;
-import com.ingenio.ingenio_backend.components.auth.service.JWTService;
+import com.ingenio.ingenio_backend.components.auth.service.IJWTService;
 import com.ingenio.ingenio_backend.components.auth.service.impl.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -17,24 +18,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private JWTService jwtService;
-	
-	@Autowired
-	private JpaUserDetailsService userDetailsService;
-	
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private final JpaUserDetailsService userDetailsService;
+	private final BCryptPasswordEncoder passwordEncoder;
+	private final IJWTService ijwtService;
 
-	
+	public SpringSecurityConfig(JpaUserDetailsService userDetailsService, BCryptPasswordEncoder passwordEncoder, IJWTService ijwtService) {
+		this.userDetailsService = userDetailsService;
+		this.passwordEncoder = passwordEncoder;
+		this.ijwtService = ijwtService;
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http.authorizeRequests()
-				.antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+				.antMatchers(Constants.PATH_LOGIN_API, "/css/**", "/js/**", "/images/**").permitAll()
+				.anyRequest().authenticated()
 				.and()
-				.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtService))
-				.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtService))
+				.addFilter(new JWTAuthenticationFilter(authenticationManager(), ijwtService))
+				.addFilter(new JWTAuthorizationFilter(authenticationManager(), ijwtService))
 				.csrf().disable()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
