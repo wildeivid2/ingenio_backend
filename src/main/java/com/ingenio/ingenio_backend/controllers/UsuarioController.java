@@ -28,7 +28,7 @@ public class UsuarioController extends CommonController<Usuario, IUsuarioService
     }
 
     @Override
-    public ResponseEntity<?> crear(Usuario usuario) {
+    public ResponseEntity<?> crear(@RequestBody Usuario usuario) {
         usuario.setPassword(encryptPassword.encode(usuario.getPassword()));
         Usuario usuarioDb = super.service.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDb);
@@ -45,6 +45,8 @@ public class UsuarioController extends CommonController<Usuario, IUsuarioService
         Usuario usuarioDb = o.get();
         usuarioDb.setPassword(encryptPassword.encode(usuario.getPassword()));
         usuarioDb.setEmail(usuario.getEmail());
+        usuarioDb.setEnabled(usuario.getEnabled());
+        usuarioDb.setRoles(usuario.getRoles());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(usuarioDb));
     }
