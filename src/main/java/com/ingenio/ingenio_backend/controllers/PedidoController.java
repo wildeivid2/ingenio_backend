@@ -1,18 +1,21 @@
 package com.ingenio.ingenio_backend.controllers;
 
 import com.ingenio.ingenio_backend.components.commons.controllers.CommonController;
+import com.ingenio.ingenio_backend.entities.Cliente;
 import com.ingenio.ingenio_backend.entities.Pedido;
 import com.ingenio.ingenio_backend.entities.Usuario;
 import com.ingenio.ingenio_backend.services.IPedidoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -24,7 +27,7 @@ public class PedidoController extends CommonController<Pedido, IPedidoService> {
     public ResponseEntity<?> editar(@RequestBody Pedido pedido, @PathVariable Long id) {
         Optional<Pedido> o = this.service.findById(id);
 
-        if(o.isEmpty()) {
+        if (o.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -36,5 +39,18 @@ public class PedidoController extends CommonController<Pedido, IPedidoService> {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.service.save(pedidoDb));
     }
+
+    @GetMapping("/cliente/{id}")
+    public ResponseEntity<?> findPorCliente(@PathVariable Long id) {
+        List<Pedido> list = this.service.findByCliente(Cliente.builder().id(id).build());
+
+        if(list.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(list);
+    }
+
+
 
 }
