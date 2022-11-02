@@ -37,7 +37,7 @@ public class Pedido implements Serializable {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
     private Cliente cliente;
 
